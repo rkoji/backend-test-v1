@@ -30,20 +30,6 @@ class PgClient(
     @Value("\${pg.iv}")
     private lateinit var iv: String
 
-    @Autowired(required = false)
-    constructor(
-        restTemplate: RestTemplate,
-        objectMapper: ObjectMapper,
-        aes256GcmEncryptor: Aes256GcmEncryptor,
-        baseUrl: String,
-        apiKey: String,
-        iv: String
-    ) : this(restTemplate, objectMapper, aes256GcmEncryptor) {
-        this.baseUrl = baseUrl
-        this.apiKey = apiKey
-        this.iv = iv
-    }
-
     override fun supports(partnerId: Long): Boolean = partnerId % 2L == 1L
 
     override fun approve(request: PgApproveRequest): PgApproveResult {

@@ -22,12 +22,18 @@ class PgClientTest {
         findAndRegisterModules()
     }
     private val aes256GcmEncryptor = mockk<Aes256GcmEncryptor>()
-    private val pgClient = PgClient(
-        restTemplate, objectMapper, aes256GcmEncryptor,
-        baseUrl = "http://localhost:8080",
-        apiKey = "11111111-1111-4111-8111-111111111111",
-        iv = "AAAAAAAAAAAAAAA"
-    )
+
+    private val pgClient = PgClient(restTemplate, objectMapper, aes256GcmEncryptor).apply {
+        // 리플렉션을 이용해서 private lateinit var 필드 값 수동 설정
+        val baseUrlField = PgClient::class.java.getDeclaredField("baseUrl").apply { isAccessible = true }
+        baseUrlField.set(this, "http://localhost:8080")
+
+        val apiKeyField = PgClient::class.java.getDeclaredField("apiKey").apply { isAccessible = true }
+        apiKeyField.set(this, "11111111-1111-4111-8111-111111111111")
+
+        val ivField = PgClient::class.java.getDeclaredField("iv").apply { isAccessible = true }
+        ivField.set(this, "AAAAAAAAAAAAAAA")
+    }
 
     private val request = PgApproveRequest(
         partnerId = 1L,
