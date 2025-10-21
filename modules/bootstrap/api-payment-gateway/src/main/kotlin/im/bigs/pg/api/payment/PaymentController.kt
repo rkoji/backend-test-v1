@@ -4,19 +4,15 @@ import im.bigs.pg.api.payment.dto.CreatePaymentRequest
 import im.bigs.pg.api.payment.dto.PaymentResponse
 import im.bigs.pg.api.payment.dto.QueryResponse
 import im.bigs.pg.api.payment.dto.Summary
-import im.bigs.pg.application.payment.port.`in`.*
 import im.bigs.pg.application.payment.port.`in`.PaymentCommand
 import im.bigs.pg.application.payment.port.`in`.PaymentUseCase
-import org.springframework.format.annotation.DateTimeFormat
+import im.bigs.pg.application.payment.port.`in`.QueryFilter
+import im.bigs.pg.application.payment.port.`in`.QueryPaymentsUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
-import java.time.LocalDateTime
+import org.springframework.web.bind.annotation.*
+import java.time.Instant
+import java.time.ZoneOffset
 
 /**
  * 결제 API 진입점.
@@ -72,13 +68,16 @@ class PaymentController(
     fun query(
         @RequestParam(required = false) partnerId: Long?,
         @RequestParam(required = false) status: String?,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") from: LocalDateTime?,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") to: LocalDateTime?,
+        @RequestParam(required = false)  from: Instant?,
+        @RequestParam(required = false)  to: Instant?,
         @RequestParam(required = false) cursor: String?,
         @RequestParam(defaultValue = "20") limit: Int,
     ): ResponseEntity<QueryResponse> {
+        val fromUtc = from?.atZone(ZoneOffset.UTC)?.toLocalDateTime()
+        val toUtc = to?.atZone(ZoneOffset.UTC)?.toLocalDateTime()
+
         val res = queryPaymentsUseCase.query(
-            QueryFilter(partnerId, status, from, to, cursor, limit),
+            QueryFilter(partnerId, status, fromUtc, toUtc, cursor, limit),
         )
         return ResponseEntity.ok(
             QueryResponse(
