@@ -2,8 +2,8 @@ package im.bigs.pg.application.payment.service
 
 import im.bigs.pg.application.partner.port.out.FeePolicyOutPort
 import im.bigs.pg.application.partner.port.out.PartnerOutPort
-import im.bigs.pg.application.payment.port.`in`.PaymentUseCase
 import im.bigs.pg.application.payment.port.`in`.PaymentCommand
+import im.bigs.pg.application.payment.port.`in`.PaymentUseCase
 import im.bigs.pg.application.payment.port.out.PaymentOutPort
 import im.bigs.pg.application.pg.port.out.PgApproveRequest
 import im.bigs.pg.application.pg.port.out.PgClientOutPort
@@ -11,7 +11,6 @@ import im.bigs.pg.domain.calculation.FeeCalculator
 import im.bigs.pg.domain.payment.Payment
 import im.bigs.pg.domain.payment.PaymentStatus
 import org.springframework.stereotype.Service
-import java.time.Instant
 
 /**
  * 결제 생성 유스케이스 구현체.
@@ -51,7 +50,7 @@ class PaymentService(
         val policy = feePolicyRepository.findEffectivePolicy(partner.id)
             ?: throw IllegalStateException("${partner.id} 요금 정책이 없습니다.")
 
-        val (fee, net) = FeeCalculator.calculateFee(command.amount,policy.percentage,policy.fixedFee)
+        val (fee, net) = FeeCalculator.calculateFee(command.amount, policy.percentage, policy.fixedFee)
         val payment = Payment(
             partnerId = partner.id,
             amount = command.amount,

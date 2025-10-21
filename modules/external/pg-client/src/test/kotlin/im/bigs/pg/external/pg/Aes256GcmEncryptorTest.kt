@@ -20,7 +20,7 @@ class Aes256GcmEncryptorTest {
         val apiKey = "11111111-1111-4111-8111-111111111111"
         val ivBase64Url = "AAAAAAAAAAAAAAA"
 
-        val encrypted = aes256GcmEncryptor.encryptToBase64Url(plainJson,apiKey,ivBase64Url)
+        val encrypted = aes256GcmEncryptor.encryptToBase64Url(plainJson, apiKey, ivBase64Url)
 
         assertNotNull(encrypted)
         println("암호화 결과(Base64URL) = $encrypted")

@@ -22,7 +22,8 @@ class PgClientTest {
         findAndRegisterModules()
     }
     private val aes256GcmEncryptor = mockk<Aes256GcmEncryptor>()
-    private val pgClient = PgClient(restTemplate, objectMapper, aes256GcmEncryptor,
+    private val pgClient = PgClient(
+        restTemplate, objectMapper, aes256GcmEncryptor,
         baseUrl = "http://localhost:8080",
         apiKey = "11111111-1111-4111-8111-111111111111",
         iv = "AAAAAAAAAAAAAAA"
@@ -48,7 +49,7 @@ class PgClientTest {
             status = "APPROVED"
         )
         every { restTemplate.exchange(any<String>(), any(), any(), String::class.java) } returns
-                ResponseEntity(objectMapper.writeValueAsString(body), HttpStatus.OK)
+            ResponseEntity(objectMapper.writeValueAsString(body), HttpStatus.OK)
 
         val result = pgClient.approve(request)
 
@@ -62,7 +63,7 @@ class PgClientTest {
         val error = PgApproveErrorResponse(1002, "INSUFFICIENT_LIMIT", "한도가 초과되었습니다.", "ref-id")
         every { aes256GcmEncryptor.encryptToBase64Url(any(), any(), any()) } returns "encryptedData"
         every { restTemplate.exchange(any<String>(), any(), any(), String::class.java) } returns
-                ResponseEntity(objectMapper.writeValueAsString(error), HttpStatus.UNPROCESSABLE_ENTITY)
+            ResponseEntity(objectMapper.writeValueAsString(error), HttpStatus.UNPROCESSABLE_ENTITY)
 
         val ex = assertThrows(IllegalStateException::class.java) {
             pgClient.approve(request)
@@ -74,7 +75,7 @@ class PgClientTest {
     fun `PG 인증 실패 - 잘못된 API-KEY`() {
         every { aes256GcmEncryptor.encryptToBase64Url(any(), any(), any()) } returns "encryptedData"
         every { restTemplate.exchange(any<String>(), any(), any(), String::class.java) } returns
-                ResponseEntity("{}", HttpStatus.UNAUTHORIZED)
+            ResponseEntity("{}", HttpStatus.UNAUTHORIZED)
 
         val ex = assertThrows(IllegalStateException::class.java) {
             pgClient.approve(request)

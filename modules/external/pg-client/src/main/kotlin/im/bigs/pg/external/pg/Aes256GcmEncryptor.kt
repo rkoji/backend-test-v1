@@ -15,11 +15,11 @@ class Aes256GcmEncryptor {
     private val objectMapper = ObjectMapper()
 
     fun encryptToBase64Url(
-        plainJson : Map<String, Any>,
-        apiKey : String,
-        ivBase64Url : String
+        plainJson: Map<String, Any>,
+        apiKey: String,
+        ivBase64Url: String
     ): String {
-        try{
+        try {
             val key = MessageDigest.getInstance("SHA-256").digest(apiKey.toByteArray(StandardCharsets.UTF_8))
 
             val iv = Base64.getUrlDecoder().decode(ivBase64Url)
@@ -31,14 +31,13 @@ class Aes256GcmEncryptor {
                 GCMParameterSpec(128, iv)
             )
 
-            val plainText =  objectMapper.writeValueAsBytes(plainJson)
+            val plainText = objectMapper.writeValueAsBytes(plainJson)
             val ciphertextWithTag = cipher.doFinal(plainText)
 
             return Base64.getUrlEncoder()
                 .withoutPadding()
                 .encodeToString(ciphertextWithTag)
-
-        }catch (e: Exception){
+        } catch (e: Exception) {
             throw IllegalStateException("암호화 실패", e)
         }
     }
