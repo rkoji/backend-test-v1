@@ -24,9 +24,15 @@ object FeeCalculator {
     fun calculateFee(amount: BigDecimal, rate: BigDecimal, fixed: BigDecimal? = null): Pair<BigDecimal, BigDecimal> {
         require(amount >= BigDecimal.ZERO) { "amount must be >= 0" }
         require(rate >= BigDecimal.ZERO) { "rate must be >= 0" }
+
         val percentageFee = amount.multiply(rate).setScale(0, RoundingMode.HALF_UP)
-        val fee = if (fixed != null) percentageFee + fixed else percentageFee
+
+        val fixedFee = fixed ?: BigDecimal.ZERO
+
+        val fee = percentageFee + fixedFee
+
         val net = amount - fee
+
         return fee to net
     }
 }
