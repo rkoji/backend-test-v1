@@ -51,13 +51,16 @@ class PaymentService(
             ?: throw IllegalStateException("${partner.id} 요금 정책이 없습니다.")
 
         val (fee, net) = FeeCalculator.calculateFee(command.amount, policy.percentage, policy.fixedFee)
+
+        val maskedCardBin = maskCardBin(command.cardBin)
+
         val payment = Payment(
             partnerId = partner.id,
             amount = command.amount,
             appliedFeeRate = policy.percentage,
             feeAmount = fee,
             netAmount = net,
-            cardBin = command.cardBin,
+            cardBin = maskedCardBin,
             cardLast4 = command.cardLast4,
             approvalCode = approve.approvalCode,
             approvedAt = approve.approvedAt,
@@ -65,5 +68,13 @@ class PaymentService(
         )
 
         return paymentRepository.save(payment)
+    }
+
+    fun maskCardBin(bin: String?): String? {
+        if (bin.isNullOrBlank()) return bin
+        return when {
+            bin.length <= 4 -> bin // 너무 짧으면 그대로
+            else -> bin.take(4) + "**"
+        }
     }
 }
