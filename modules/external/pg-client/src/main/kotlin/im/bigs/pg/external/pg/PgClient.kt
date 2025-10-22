@@ -8,9 +8,12 @@ import im.bigs.pg.domain.payment.PaymentStatus
 import im.bigs.pg.external.pg.dto.PgApproveErrorResponse
 import im.bigs.pg.external.pg.dto.PgApproveResponse
 import im.bigs.pg.external.pg.dto.PgEncryptedRequest
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.*
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 

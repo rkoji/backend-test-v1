@@ -18,12 +18,12 @@ class FeeCalculatorAdditionalTest {
         val (fee, net) = FeeCalculator.calculateFee(amount, rate)
 
         // then
-        assertEquals(BigDecimal(235),fee)
-        assertEquals(BigDecimal(9765),net)
+        assertEquals(BigDecimal(235), fee)
+        assertEquals(BigDecimal(9765), net)
     }
 
     @Test
-    fun `비율 수수료와 고정 수수료를 함께 적용`(){
+    fun `비율 수수료와 고정 수수료를 함께 적용`() {
         // given
         val amount = BigDecimal(10000)
         val rate = BigDecimal("0.0235")
@@ -33,12 +33,12 @@ class FeeCalculatorAdditionalTest {
         val (fee, net) = FeeCalculator.calculateFee(amount, rate, fixed)
 
         // then
-        assertEquals(BigDecimal(535),fee)
-        assertEquals(BigDecimal(9465),net)
+        assertEquals(BigDecimal(535), fee)
+        assertEquals(BigDecimal(9465), net)
     }
 
     @Test
-    fun `0원일 경우 정산금도 0`(){
+    fun `0원일 경우 정산금도 0`() {
         // given
         val amount = BigDecimal.ZERO
         val rate = BigDecimal("0.0235")
@@ -49,7 +49,6 @@ class FeeCalculatorAdditionalTest {
         // then
         assertEquals(BigDecimal.ZERO, fee)
         assertEquals(BigDecimal.ZERO, net)
-
     }
 
     @Test

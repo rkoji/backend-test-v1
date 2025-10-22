@@ -42,8 +42,7 @@ class PaymentEntity(
     var createdAt: Instant,
     @Column(nullable = false)
     var updatedAt: Instant,
-)
-{
+) {
     protected constructor() : this(
         id = null,
         partnerId = 0L,
