@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import kotlin.test.assertEquals
 
-class FeeCalculatorTest {
+class FeeCalculatorAdditionalTest {
 
     @Test
     fun `비율 수수료만 적용`() {
